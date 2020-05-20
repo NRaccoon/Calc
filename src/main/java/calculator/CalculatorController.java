@@ -13,8 +13,10 @@ public class CalculatorController {
 
     private Calculator calculator;
     private boolean startNumber = true;
-    private double number1;
+    private float number1;
     private String operator = "";
+    private boolean tort = false;
+    private int x = 0;
 
     @FXML
     private void initialize() {
@@ -38,21 +40,45 @@ public class CalculatorController {
         String operatorPressed = ((Button) event.getSource()).getText();
         System.out.println(operatorPressed);
         if (operatorPressed.equals("=")) {
-           if (operator.isEmpty()) {
-               return;
-           }
-           double number2 = Double.parseDouble(display.getText());
-           double result = calculator.calculate(number1, number2, operator);
-           display.setText(String.format("%.0f", result));
-           operator = "";
-        } else {
-            if (! operator.isEmpty()) {
+            if (operator.isEmpty()) {
                 return;
             }
-            number1 = Double.parseDouble(display.getText());
+            float number2 = Float.parseFloat(display.getText());
+            float result = (float) calculator.calculate(number1, number2, operator);
+            if (tort) {
+                String[] Str1 = String.valueOf(number1).split("[,]", 2);
+                String[] Str2 = String.valueOf(number2).split("[,]", 2);
+
+                x = Math.max(Str1[1].length(), Str2[1].length());
+                display.setText(String.format("%," + x + "f", result));
+            } else {
+                x = 0;
+                display.setText(String.format(((int) result == result) ? "%.0f" : "%s", result));
+            }
+            operator = "";
+        } else if (operatorPressed.equals("AC")) {
+            display.setText("0");
+            startNumber = false;
+            tort = false;
+            operator = "";
+        } else if (operatorPressed.equals("+/-")) {
+            if (display.getText().startsWith("-")) {
+                display.setText(display.getText().substring(1));
+            } else {
+                display.setText("-" + display.getText());
+            }
+        } else if (operatorPressed.equals(".")) {
+            tort = true;
+            display.setText(display.getText().concat("."));
+        } else {
+            if (!operator.isEmpty()) {
+                return;
+            }
+            number1 = Float.parseFloat(display.getText());
             operator = operatorPressed;
             startNumber = true;
         }
+
     }
 
 }

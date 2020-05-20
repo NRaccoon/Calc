@@ -2,7 +2,7 @@ package calculator.model;
 
 public class Calculator {
 
-    public double calculate(double number1, double number2, String operator) {
+    public double calculate(float number1, float number2, String operator) {
         switch (operator) {
             case "+":
                 return number1 + number2;
